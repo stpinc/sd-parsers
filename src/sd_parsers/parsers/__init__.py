@@ -13,8 +13,9 @@ from ._comfyui import ComfyUIParser
 from ._fooocus import FooocusParser
 from ._invokeai import InvokeAIParser
 from ._novelai import NovelAIParser
+from ._steganographic_alpha_channel import SteganographicAlphaChannelParser
 
-MANAGED_PARSERS = [FooocusParser, AUTOMATIC1111Parser, ComfyUIParser, InvokeAIParser, NovelAIParser]
+MANAGED_PARSERS = [FooocusParser, AUTOMATIC1111Parser, ComfyUIParser, InvokeAIParser, NovelAIParser, SteganographicAlphaChannelParser]
 
 __all__ = [
     "AUTOMATIC1111Parser",
@@ -22,4 +23,5 @@ __all__ = [
     "NovelAIParser",
     "ComfyUIParser",
     "FooocusParser",
+    "SteganographicAlphaChannelParser"
 ]
