@@ -10,3 +10,4 @@ class Generators(str, Enum):
     INVOKEAI = "InvokeAI"
     NOVELAI = "NovelAI"
     FOOOCUS = "Fooocus"
+    STEGANOGRAPHIC_ALPHA = "SteganographicAlphaChannel"

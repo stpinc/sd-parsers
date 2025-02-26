@@ -7,7 +7,7 @@ from typing import Any, Dict
 
 from PIL.Image import Image
 
-from sd_parsers.data import Generators, Model, Prompt, Sampler
+from sd_parsers.data import Generators
 from sd_parsers.exceptions import MetadataError, ParserError
 from sd_parsers.parser import Parser, ParseResult
 from sd_parsers.parsers._novelai import NovelAIParser
@@ -72,9 +72,8 @@ class SteganographicAlphaChannelParser(Parser):
             else:
                 return None
 
-    @property
-    def generator(self):
-        return Generators.STEGANOGRAPHIC_ALPHA
+    _COMPLEXITY_INDEX = 200
+    _generator = Generators.STEGANOGRAPHIC_ALPHA
 
     def read_parameters(self, image: Image, use_text: bool = True):
         """
@@ -143,7 +142,7 @@ class SteganographicAlphaChannelParser(Parser):
         match parsing_context["Source"]:
             case "NovelAI Stealth Metadata":
                 try:
-                    parameters["Comment"].update({"decoded_from_stealth_metadata": True})
+                    parameters["Comment"].update({"Decoded from Stealth Metadata": "True"})
                     return NovelAIParser.parse(self, parameters, Any)
                 except KeyError as error:
                     raise ParserError("error reading parameter values") from error
@@ -151,7 +150,6 @@ class SteganographicAlphaChannelParser(Parser):
             case "AUTOMATIC1111 StealthPNG":
                 try:
                     parameters["parameters"] += ", Decoded from Stealth Metadata: True"
-                    print("steg parser reading")
                     return AUTOMATIC1111Parser.parse(self, parameters, Any)
                 except (KeyError, ValueError) as error:
                     raise ParserError("error reading parameter string") from error
