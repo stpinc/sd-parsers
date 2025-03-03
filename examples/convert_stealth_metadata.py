@@ -36,6 +36,12 @@ def parse(filename):
     try:
         if prompt_info.metadata["Decoded from Stealth Metadata"] == "True":
             metadata = PngInfo()
+            try:
+                assert prompt_info.raw_parameters["Software"]
+            except KeyError:
+                prompt_info.raw_parameters.update({"Software": "Unknown"})
+                logging.debug(f"The SOFTWARE key was not present in the parsed image, setting to 'Unknown'")
+
             match prompt_info.raw_parameters["Software"]:
                 case "NovelAI":
                     for k, v in prompt_info.raw_parameters.items():
@@ -43,10 +49,16 @@ def parse(filename):
 
                     # Software is picky about the JSON being properly formatted on the Comment field, do this one 
                     # properly instead of just copying the string over
+                    #prompt_info.raw_parameters["Comment"]
                     metadata.add_text(
                         "Comment", json.dumps((prompt_info.raw_parameters["Comment"]))
                     )
-                case "AUTOMATIC1111":
+                case ("AUTOMATIC1111"):
+                    metadata.add_text(
+                        "parameters", prompt_info.raw_parameters["parameters"]
+                    )
+
+                case ("Unknown"):
                     metadata.add_text(
                         "parameters", prompt_info.raw_parameters["parameters"]
                     )
