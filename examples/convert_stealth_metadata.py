@@ -87,10 +87,10 @@ def main(file):
         num_items = len(list(file_glob))
 
         with tqdm(total=num_items) as progress_bar:
-            progress_bar.set_description("Searching")
             conv_items: int = 0
 
             for filename in Path(file[0]).rglob("*"):
+                progress_bar.set_description(str(filename)[-32:]) #only show last 32 chars of filename on the bar
                 progress_bar.update(1)
 
                 if filename.is_file():
@@ -104,7 +104,7 @@ def main(file):
 
             progress_bar.set_description("Complete")
 
-        progress_bar.write(f"Done. Converted {conv_items} items.")
+        progress_bar.write(f"Done. There were a total of {conv_items} items needing conversion.")
 
     # If it's not a directory, just do a simple single-file parse
     else:
