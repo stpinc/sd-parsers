@@ -72,7 +72,7 @@ def parse(filename):
     except UnidentifiedImageError:
         pass
 
-    except (KeyError, AttributeError):
+    except (KeyError, AttributeError) as e:
         # print(f"{filename} did not contain any hidden metadata.")
         pass
 
@@ -118,6 +118,7 @@ def main(file):
 
 if __name__ == "__main__":
     if sys.argv[1:]:
+        logging.getLogger().setLevel(logging.INFO)
         main(sys.argv[1:])
     else:
         print("usage: convert_stealth_metadata.py <a file or directory>")
