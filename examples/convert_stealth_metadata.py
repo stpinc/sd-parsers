@@ -74,6 +74,7 @@ def parse(filename):
 
     except (KeyError, AttributeError) as e:
         # print(f"{filename} did not contain any hidden metadata.")
+        logging.debug(f"Error reading: {e} in {filename}")
         pass
 
     except Exception as e:
