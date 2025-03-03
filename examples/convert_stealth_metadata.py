@@ -17,12 +17,22 @@ import sys
 
 parser_manager = ParserManager()
 
-# TODO: 
-# It may be worth figuring out how to delete the stealth data from the image, to avoid processing and re-saving every time.
-# Another option is to put something in the metadata indicating it's been processed already.
-# Right now, this will re-write the metadata of files that may have already been processed.
 def parse(filename):
-    prompt_info = parser_manager.parse(filename)
+    try:
+        old_image = Image.open(filename)
+    except UnidentifiedImageError:
+        return False
+
+    # Skip over the entire process if it's been processed already.
+    try:
+        if old_image.info["Stealth Metadata Copied To Image"] == "True":
+            logging.debug(f"{filename} has been processed already.")
+            return False
+    except KeyError:
+        pass
+    
+    prompt_info = parser_manager.parse(old_image)
+
     try:
         if prompt_info.metadata["Decoded from Stealth Metadata"] == "True":
             metadata = PngInfo()
@@ -40,6 +50,9 @@ def parse(filename):
                     metadata.add_text(
                         "parameters", prompt_info.raw_parameters["parameters"]
                     )
+                    
+            metadata.add_text("Stealth Metadata Copied To Image", "True")
+
             with Image.open(filename) as new_image:
                 new_image.save(filename, pnginfo=metadata)
                 return True
